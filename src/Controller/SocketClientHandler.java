@@ -68,7 +68,6 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
 
     public void requestHandler(String req) {
         reqDto = gson.fromJson(req, ReqDto.class);
-        System.out.println(reqDto);
         int code = reqDto.getTransferCode();
         Object body = reqDto.getBody();
 
@@ -76,7 +75,6 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
             case 1:
             case 2:
                 userConnectionManager(code, body);
-                System.out.println("Here " + body);
                 break;
             default:
                 userChatConnectionManager(code, body);
@@ -87,7 +85,7 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
     @Override
     public void onConnectionLost() {
         System.out.println("Session was forcibly terminated.\n" + socket.getInetAddress());
-        if (currentTitle != null){
+        if (currentTitle != null) {
             rep.chatManager(currentTitle, user, false);
         }
         stop();
@@ -95,13 +93,12 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
 
     @Override
     public void onInput(String msg) {
-        System.out.println("PORT CHECK ::::" + socket.getPort() + ", On input");
         requestHandler(msg);
-        System.out.println("Current Input Contents" + msg);
     }
 
     @Override
     public void onOutput(RespDto<?> respDto) {
+        System.out.println("[[ RESPONSE ]]  ::  " + respDto);
         out.addPrintWriter(pw);
         String response = gson.toJson(respDto);
         out.toOutputThread(response);
@@ -125,8 +122,6 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
                 }
                 onConnectionLost();
                 break;
-            default:
-                break;
         }
     }
 
@@ -146,7 +141,7 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
                 rep.chatManager(currentTitle, user, true);
                 myChatList.put(currentTitle, rep.getChatInfo(currentTitle));
                 entry = rep.getChatEntry(currentTitle);
-                conActResp = new RespDto<>(code, getStringNick(entry));
+                conActResp = new RespDto<>(code, getStringNick(entry).size());
                 onOutput(conActResp);
                 break;
             case 4: // Left chat
@@ -168,7 +163,7 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
                 } else {
                     conActResp = new RespDto<>(10, "\nA Chatroom with that title already exists.");
                 }
-//                rep.changeNotify(101);
+                rep.changeNotify(101);
                 onOutput(conActResp);
                 break;
             case 6:
@@ -177,8 +172,11 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
                 MFCmodel msg = new MFCmodel(sender, (String) map.get("content"), (boolean) map.get("isWhisper"), null);
                 messageOperator(msg, myChatList.get(currentTitle));
                 break;
-            default:
-                changeNotify(101);
+            case 401:
+                entry = rep.getChatEntry(currentTitle);
+                conActResp = new RespDto<>(code, entry == null ? 0 : getStringNick(entry).size());
+                System.out.println("OUT : " + conActResp);
+                onOutput(conActResp);
                 break;
         }
     }
@@ -207,10 +205,10 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
     /*
      * ********************* State Change Code *********************
      *
-     * 101 : A new chat has been added. / A chat has been removed.  ---> To entire user.
-     * 201 : A new user entered this chat. / A user left this chat. ---> Users into chatroom.
-     * 301 : The host has left.                                     ---> Users into chatroom.
-     * 401 : Check a user state.
+     * 101 : A new chat has been added. / A chat has been removed.
+     * 201, 202 : A new user entered this chat. / A user left this chat.
+     * 301 : The host has left.
+     * 401 : Check an entry state.
      *
      * *************************************************************
      */
@@ -222,14 +220,6 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
             case 301:
                 stateNotifier = new RespDto<>(code, rep.listRefresher());
                 onOutput(stateNotifier);
-                break;
-            case 201:
-            case 202:
-                entry = rep.getChatEntry(currentTitle);
-                stateNotifier = new RespDto<>(code, getStringNick(entry));
-                onOutput(stateNotifier);
-                break;
-            default:
                 break;
         }
     }
@@ -243,6 +233,7 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
     public List<String> getStringNick(List<UserModel> user) {
         List<String> nicks = new ArrayList<>();
         user.forEach(userModel -> nicks.add(userModel.getNickName()));
+        System.out.println("GET STRING NICK ---> " + nicks);
         return nicks;
     }
 

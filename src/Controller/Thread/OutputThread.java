@@ -20,8 +20,8 @@ public class OutputThread extends Thread implements SCHListener {
 
     @Override
     public void toOutputThread(String msg) {
-        Iterator<PrintWriter> iterator = pws.listIterator();
         synchronized (pws){
+            Iterator<PrintWriter> iterator = pws.listIterator();
             while (iterator.hasNext()){
                 PrintWriter pw = iterator.next();
                 pw.println(msg + "\n");

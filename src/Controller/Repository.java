@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class Repository implements ChangeNotifier {
     private static Map<Integer, SocketClientHandler> connectedSocketOnServer = new HashMap<>();
-    private static Map<String, ChatRoomModel> chatRoomList = new HashMap<>(); //  key = title, value = chatroom model
+    private static Map<String, ChatRoomModel> chatRoomList = new HashMap<>(); //
     private static Repository instance = new Repository();
 
     private Repository() {
@@ -28,7 +28,6 @@ public class Repository implements ChangeNotifier {
     public boolean lobbyManager(ChatRoomModel chat, boolean isCreate) {
         if (isCreate) {
             synchronized (chatRoomList) {
-                int before = chatRoomList.size();
                 for (Map.Entry<String, ChatRoomModel> mp : chatRoomList.entrySet()) {
                     if (mp.getKey().equals(chat.getTitle())) {
                         return false;
@@ -36,14 +35,11 @@ public class Repository implements ChangeNotifier {
                     }
                 }
                 chatRoomList.put(chat.getTitle(), chat);
-                int after = chatRoomList.size();
-                if (before != after) {
-                    changeNotify(101);
-                }
             }
         } else {
             chatRoomList.remove(chat.getTitle());
         }
+        changeNotify(101);
         return true;
     }
 
@@ -66,14 +62,15 @@ public class Repository implements ChangeNotifier {
                     lobbyManager(chat, false);
                     changeNotifier(301, entry);
                 }
-
-
             }
         }
     }
 
 
     public List<UserModel> getChatEntry(String title) {
+        if (getChatInfo(title) == null){
+            return null;
+        }
         List<UserModel> entry = getChatInfo(title).getEntry();
         return entry;
     }
@@ -91,11 +88,9 @@ public class Repository implements ChangeNotifier {
     public void connectionHandler(SocketClientHandler sch, boolean isAlive) {
         synchronized (connectedSocketOnServer) {
             if (!isAlive) {
-//                System.out.println("Remove  >>  " + sch.getSocket().getInetAddress());
                 connectedSocketOnServer.remove(sch);
 
             } else {
-//                System.out.println("New User >>  " + sch.getSocket().getInetAddress());
                 connectedSocketOnServer.putIfAbsent(sch.getSocket().getPort(), sch);
             }
         }
