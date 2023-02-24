@@ -24,7 +24,15 @@ public class InputThread extends Thread {
                 System.out.println("Input thread is running...");
                 byte[] buffer = new byte[1024];
                 int a = inputStream.read(buffer);
-                listener.onInput(new String(buffer, 0, a).trim());
+                String inputString = new String(buffer, 0, a).trim();
+                while (a == buffer.length) {
+                    a = inputStream.read(buffer);
+                    inputString += new String(buffer, 0, a).trim();
+                }
+                String[] inputs = inputString.split("\n");
+                for (String input : inputs){
+                    listener.onInput(input);
+                }
             }
         } catch (SocketException e) {
             System.out.println("!! ERROR !!\nDETAILS : " + e);
