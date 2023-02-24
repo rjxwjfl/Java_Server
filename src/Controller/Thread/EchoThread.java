@@ -28,12 +28,15 @@ public class EchoThread extends Thread {
                 out.write("ALIVE\n".getBytes());
                 out.flush();
                 int n = in.read(buffer);
-                Thread.sleep(TIMEOUT);
-                if (n == -1 | !"ALIVE".equals(new String(buffer, 0, n).trim())){
-                    Repository.getInstance().connectionHandler(socket, false);
-                    System.out.println("CONNECTION TERMINATED   >>  " +
-                            socket.getSocket().getInetAddress() +" : "+ socket.getSocket().getPort());
-                    return;
+                while (n == buffer.length) {
+                    n = in.read(buffer);
+                    Thread.sleep(TIMEOUT);
+                    if (n == -1 | !"ALIVE".equals(new String(buffer, 0, n).trim())){
+                        Repository.getInstance().connectionHandler(socket, false);
+                        System.out.println("CONNECTION TERMINATED   >>  " +
+                                socket.getSocket().getInetAddress() +" : "+ socket.getSocket().getPort());
+                        return;
+                    }
                 }
             }
         } catch (IOException | InterruptedException e) {
