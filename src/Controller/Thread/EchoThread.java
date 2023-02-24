@@ -1,8 +1,8 @@
-package src.Controller.Thread;
+package Controller.Thread;
 
 
-import src.Controller.Repository;
-import src.Controller.SocketClientHandler;
+import Controller.Repository;
+import Controller.SocketClientHandler;
 
 import java.io.IOException;
 import java.io.InputStream;

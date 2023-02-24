@@ -1,18 +1,18 @@
-package src.Controller;
+package Controller;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-import src.Controller.Thread.InputThread;
-import src.Controller.Thread.Interface.ChangeNotifier;
-import src.Controller.Thread.Interface.InputThreadListener;
-import src.Controller.Thread.Interface.OutputThreadListener;
-import src.Controller.Thread.OutputThread;
-import src.Model.DataTransferObject.ReqDto;
-import src.Model.DataTransferObject.RespDto;
-import src.Model.ChatRoomModel;
-import src.Model.MFCmodel;
-import src.Model.MTCmodel;
-import src.Model.UserModel;
+import Controller.Thread.InputThread;
+import Controller.Thread.Interface.ChangeNotifier;
+import Controller.Thread.Interface.InputThreadListener;
+import Controller.Thread.Interface.OutputThreadListener;
+import Controller.Thread.OutputThread;
+import Model.DataTransferObject.ReqDto;
+import Model.DataTransferObject.RespDto;
+import Model.ChatRoomModel;
+import Model.MFCmodel;
+import Model.MTCmodel;
+import Model.UserModel;
 
 import java.io.*;
 import java.net.Socket;

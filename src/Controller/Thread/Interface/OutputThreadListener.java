@@ -1,7 +1,7 @@
-package src.Controller.Thread.Interface;
+package Controller.Thread.Interface;
 
 
-import src.Model.DataTransferObject.RespDto;
+import Model.DataTransferObject.RespDto;
 
 public interface OutputThreadListener {
     void onOutput(RespDto<?> respDto);

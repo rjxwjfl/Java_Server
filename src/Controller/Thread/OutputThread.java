@@ -1,8 +1,8 @@
-package src.Controller.Thread;
+package Controller.Thread;
 
 
-import src.Controller.Thread.Interface.OutputThreadListener;
-import src.Controller.Thread.Interface.SCHListener;
+import Controller.Thread.Interface.OutputThreadListener;
+import Controller.Thread.Interface.SCHListener;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;

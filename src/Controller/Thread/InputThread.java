@@ -1,7 +1,7 @@
-package src.Controller.Thread;
+package Controller.Thread;
 
 
-import src.Controller.Thread.Interface.InputThreadListener;
+import Controller.Thread.Interface.InputThreadListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;

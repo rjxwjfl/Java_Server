@@ -1,4 +1,4 @@
-package src.Controller.Thread.Interface;
+package Controller.Thread.Interface;
 
 public interface InputThreadListener {
     void onInput(String msg);

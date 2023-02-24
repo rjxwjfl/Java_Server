@@ -1,4 +1,4 @@
-package src.Model.DataTransferObject;
+package Model.DataTransferObject;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

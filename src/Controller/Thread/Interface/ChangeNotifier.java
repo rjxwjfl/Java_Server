@@ -1,6 +1,6 @@
-package src.Controller.Thread.Interface;
+package Controller.Thread.Interface;
 
-import src.Model.UserModel;
+import Model.UserModel;
 
 import java.util.List;
 

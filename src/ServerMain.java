@@ -1,9 +1,9 @@
-package src;
 
 
-import src.Controller.Repository;
-import src.Controller.SocketClientHandler;
-import src.Controller.Thread.EchoThread;
+
+import Controller.Repository;
+import Controller.SocketClientHandler;
+import Controller.Thread.EchoThread;
 
 import java.io.IOException;
 import java.net.ServerSocket;

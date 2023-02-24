@@ -1,8 +1,8 @@
-package src.Controller;
+package Controller;
 
-import src.Controller.Thread.Interface.ChangeNotifier;
-import src.Model.ChatRoomModel;
-import src.Model.UserModel;
+import Controller.Thread.Interface.ChangeNotifier;
+import Model.ChatRoomModel;
+import Model.UserModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
