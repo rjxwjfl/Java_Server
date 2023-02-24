@@ -1,6 +1,4 @@
 
-
-
 import Controller.Repository;
 import Controller.SocketClientHandler;
 import Controller.Thread.EchoThread;
@@ -13,13 +11,11 @@ public class ServerMain {
     private static final int PORT_MAIN = 8080;
     private static final int PORT_SUB = 8888;
     private ServerSocket serverSocket;
-    private ServerSocket echoSocket;
-    private EchoThread echoThread;
 
     private void run() {
         try {
             serverSocket = new ServerSocket(PORT_MAIN);
-            echoSocket = new ServerSocket(PORT_SUB);
+            ServerSocket echoSocket = new ServerSocket(PORT_SUB);
             System.out.println("<< SERVER RUNNING ON " + "[ HOST:" + serverSocket.getInetAddress() + " / PORT:" + PORT_MAIN + " / PORT(Echo):"+ PORT_SUB +" ] >>");
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -29,7 +25,7 @@ public class ServerMain {
 
                 System.out.println("CONNECTION FOUND    --->     " + socket.getInetAddress() + " : " + socket.getPort());
 
-                echoThread = new EchoThread(aliveCheck);
+                EchoThread echoThread = new EchoThread(aliveCheck);
                 Repository.getInstance().connectionHandler(socketClientHandler, true);
 
                 echoThread.start();

@@ -12,8 +12,6 @@ public class EchoThread extends Thread {
 
     private static final long TIMEOUT = 30000;
     private final SocketClientHandler socket;
-    private OutputStream out;
-    private InputStream in;
 
     public EchoThread(SocketClientHandler socketClientHandler) {
         this.socket = socketClientHandler;
@@ -22,8 +20,8 @@ public class EchoThread extends Thread {
     @Override
     public void run() {
         try {
-            out = socket.getSocket().getOutputStream();
-            in = socket.getSocket().getInputStream();
+            OutputStream out = socket.getSocket().getOutputStream();
+            InputStream in = socket.getSocket().getInputStream();
             while (true) {
                 System.out.println("Check that the Client is alive.");
                 byte[] buffer = new byte[1024];
@@ -47,7 +45,7 @@ public class EchoThread extends Thread {
                 try {
                     socket.getSocket().close();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }

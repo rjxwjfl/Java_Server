@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.net.SocketException;
 
 public class InputThread extends Thread {
-    private InputStream inputStream;
+    private final InputStream inputStream;
     private final InputThreadListener listener;
 
     public InputThread(InputStream inputStream, InputThreadListener listener) {
@@ -29,12 +29,10 @@ public class InputThread extends Thread {
         } catch (SocketException e) {
             System.out.println("!! ERROR !!\nDETAILS : " + e);
             listener.onConnectionLost();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         } catch (StringIndexOutOfBoundsException e){
             listener.onConnectionLost();
-        } catch (NullPointerException e){
-            e.printStackTrace();
         }
     }
 }

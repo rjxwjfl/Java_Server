@@ -22,18 +22,16 @@ import java.util.List;
 import java.util.Map;
 
 public class SocketClientHandler implements InputThreadListener, OutputThreadListener, ChangeNotifier {
-    private Socket socket;
+    private final Socket socket;
     private UserModel user;
-    private Gson gson;
-    private ReqDto<?> reqDto;
+    private final Gson gson;
     private String currentTitle;
-    private List<UserModel> entry;
-    private Map<String, ChatRoomModel> myChatList;
-    private PrintWriter pw;
+    private final Map<String, ChatRoomModel> myChatList;
+    private final PrintWriter pw;
 
-    private InputThread in;
-    private OutputThread out;
-    private Repository rep;
+    private final InputThread in;
+    private final OutputThread out;
+    private final Repository rep;
 
 
     public SocketClientHandler(Socket socket) throws IOException {
@@ -67,7 +65,7 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
     }
 
     public void requestHandler(String req) {
-        reqDto = gson.fromJson(req, ReqDto.class);
+        ReqDto<?> reqDto = gson.fromJson(req, ReqDto.class);
         int code = reqDto.getTransferCode();
         Object body = reqDto.getBody();
 
@@ -98,7 +96,6 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
 
     @Override
     public void onOutput(RespDto<?> respDto) {
-        System.out.println("[[ RESPONSE ]]  ::  " + respDto);
         out.addPrintWriter(pw);
         String response = gson.toJson(respDto);
         out.toOutputThread(response);
@@ -140,7 +137,7 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
                 }
                 rep.chatManager(currentTitle, user, true);
                 myChatList.put(currentTitle, rep.getChatInfo(currentTitle));
-                entry = rep.getChatEntry(currentTitle);
+                List<UserModel> entry = rep.getChatEntry(currentTitle);
                 conActResp = new RespDto<>(code, getStringNick(entry).size());
                 onOutput(conActResp);
                 break;
@@ -159,7 +156,6 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
                 if (rep.lobbyManager(model, true)) {
                     myChatList.put(currentTitle, rep.getChatInfo(currentTitle));
                     conActResp = new RespDto<>(code, getStringNick(myChatList.get(currentTitle).getEntry()));
-                    System.out.println("\nA new chat was created.\n");
                 } else {
                     conActResp = new RespDto<>(10, "\nA Chatroom with that title already exists.");
                 }
@@ -175,7 +171,6 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
             case 401:
                 entry = rep.getChatEntry(currentTitle);
                 conActResp = new RespDto<>(code, entry == null ? 0 : getStringNick(entry).size());
-                System.out.println("OUT : " + conActResp);
                 onOutput(conActResp);
                 break;
         }
@@ -201,17 +196,6 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
         out.toOutputThread(cvtMsg);
     }
 
-
-    /*
-     * ********************* State Change Code *********************
-     *
-     * 101 : A new chat has been added. / A chat has been removed.
-     * 201, 202 : A new user entered this chat. / A user left this chat.
-     * 301 : The host has left.
-     * 401 : Check an entry state.
-     *
-     * *************************************************************
-     */
     @Override
     public void changeNotify(int code) {
         RespDto<?> stateNotifier;
@@ -233,7 +217,6 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
     public List<String> getStringNick(List<UserModel> user) {
         List<String> nicks = new ArrayList<>();
         user.forEach(userModel -> nicks.add(userModel.getNickName()));
-        System.out.println("GET STRING NICK ---> " + nicks);
         return nicks;
     }
 
@@ -243,13 +226,9 @@ public class SocketClientHandler implements InputThreadListener, OutputThreadLis
     }
 
     @Override
-    public void changeNotifier(int code, List<UserModel> listener) {
-
-    }
+    public void changeNotifier(int code, List<UserModel> listener) {}
 
     @Override
-    public void changeNotifierDtl(int code, UserModel user, List<UserModel> listener) {
-
-    }
+    public void changeNotifierDtl(int code, UserModel user, List<UserModel> listener) {}
 }
 

@@ -11,11 +11,9 @@ import java.util.List;
 
 
 public class OutputThread extends Thread implements SCHListener {
-    private List<PrintWriter> pws = new ArrayList<>();
-    private final OutputThreadListener listener;
+    private final List<PrintWriter> pws = new ArrayList<>();
 
     public OutputThread(OutputThreadListener listener) {
-        this.listener = listener;
     }
 
     @Override
