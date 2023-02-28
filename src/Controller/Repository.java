@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class Repository implements ChangeNotifier {
     private static final Map<Integer, SocketClientHandler> connectedSocketOnServer = new HashMap<>();
-    private static final Map<String, ChatRoomModel> chatRoomList = new HashMap<>(); //
+    private static final Map<String, ChatRoomModel> chatRoomList = new HashMap<>();
     private static Repository instance = new Repository();
 
     private Repository() {
